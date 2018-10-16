@@ -1,0 +1,4 @@
+biopython
+click
+numpy
+matplotlib
