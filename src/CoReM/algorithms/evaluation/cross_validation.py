@@ -11,16 +11,21 @@ LOG.addHandler(console)
 LOG.setLevel(logging.INFO)
 
 
-def k_fold_cross_validation(regression, input_dataset):
+def k_fold_cross_validation(regressor, input_dataset):
+    """
+    Performs k-fold cross validation and reports various statistical properties
+    :param regressor:
+    :param input_dataset:
+    """
     splits = 10
     data = input_dataset[0]
     ddGs = input_dataset[1]
     LOG.info("Perform "+str(splits)+"-fold-crossvalidation")
-    k_fold = cross_val_score(regression, np.asarray(data), np.asarray(ddGs), cv=splits)
-    k_fold_mean_absolute_error = cross_val_score(regression, np.asarray(data), np.asarray(ddGs), cv=splits,
-                             scoring="neg_mean_absolute_error")
-    k_fold_mean_squared_error = cross_val_score(regression, np.asarray(data), np.asarray(ddGs), cv=splits,
-                                                 scoring="neg_mean_squared_error")
+    k_fold = cross_val_score(regressor, np.asarray(data), np.asarray(ddGs), cv=splits)
+    k_fold_mean_absolute_error = cross_val_score(regressor, np.asarray(data), np.asarray(ddGs), cv=splits,
+                                                 scoring="neg_mean_absolute_error")
+    k_fold_mean_squared_error = cross_val_score(regressor, np.asarray(data), np.asarray(ddGs), cv=splits,
+                                                scoring="neg_mean_squared_error")
 
     LOG.info("Finished "+str(splits)+"-fold-crossvalidation")
     LOG.info('Mean-Absolute-Error: '+str(round(k_fold_mean_absolute_error.mean(), 2)))

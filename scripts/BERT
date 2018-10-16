@@ -4,8 +4,8 @@ import click
 import logging
 import pandas as pd
 
+from src.BERT.PDB_Parser_Encoder.PDB_parser_encoder import parse_and_encode_pdb
 from src.BERT.PDB_Parser_Encoder.add_point_mutation import do_and_return_pointmutation
-from src.BERT.PDB_Parser_Encoder.main import parse_and_encode_pdb
 from src.BERT.core.PointMutation import PointMutation
 from src.BERT.core.SequenceInformation import SequenceInformation
 from src.BERT.evaluation.epitope_per_index_plot import plot_epitope_spread
@@ -67,14 +67,16 @@ def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_
     mhc_alleles = dict(zip(mhc_alleles, allele_frequency))
 
     # Read contact informations from pdb-file
+    LOG.info("Generating contact information for amino acids")
     encoded_pdb_informations = parse_and_encode_pdb(pdb_file, 7)
 
     # train regressor
+    LOG.info("Training CoReM regressor")
     regressor = train_regressor('data/inputfiles/contact_blomap_7A.csv')
 
     # Construct an MSA Object, which contains the information about the MSA
     my_msa = MSA(input_msa, reference_sequence, majority_threshold)
-    my_msa.write_sequnce('data/ref_sequence.fasta')
+    my_msa.write_sequence('data/ref_sequence.fasta')
 
     # Information about the sequences (eptitopes, msa, ...) is bundled
     target_sequence = SequenceInformation(my_msa.get_sequence(), my_msa.get_consensus_sequence())
@@ -96,8 +98,9 @@ def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_
     queue = target_sequence.queue
 
     # deimmunization loop
+    LOG.error("Starting deimmunization")
     while number_mutations > len(final_mutations):
-        print('Computing ' + str(len(final_mutations) + 1) + '. iteration ...')
+        LOG.info('Computing ' + str(len(final_mutations) + 1) + '. iteration ...')
 
         # create temporary sequence class
         temp_sequence = SequenceInformation(my_msa.get_sequence(), my_msa.get_consensus_sequence())
@@ -127,7 +130,7 @@ def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_
         # Update immunogenicity
         current_immunogenicity = temp_sequence.base_immunogenicity
 
-        # Indroduced muations
+        # Introduced mutations
         current_mutations = []
         for pos in range(pos_to_check):
             # index of residue to mutate
@@ -143,14 +146,15 @@ def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_
             try:
                 mutations_to_check = mutation_order_by_group[current_amino_group].copy()
             except:
+                LOG.error("Attempted to exchange into an disallowed amino acid")
                 mutations_to_check = one_letter_code.copy()
-                print("dafaq?")
 
             try:
                 mutations_to_check.remove(current_residue)
             except:
                 pass
 
+            #  Generate all required features for the decision function
             for aa in mutations_to_check:
                 feature_vector_aa = do_and_return_pointmutation(encoded_pdb_informations, position + 1, pdb_chain, aa)
                 feature_vector_aa = [item for sublist in feature_vector_aa for item in sublist]
@@ -159,11 +163,12 @@ def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_
                     PointMutation(aa, position, temp_sequence.update_immunogenicity(aa, position, mhc_ii_pan),
                                   ddG_aa[0], target_sequence.get_sequence_pos(position)))
 
+        #  find the final mutations using the decision function
         final_mutations.append(decision_function_simple(current_mutations, float(weight)))
 
     # Print final mutations
     for mutation in final_mutations:
-        print(mutation.__str__())
+        LOG.info(mutation.__str__())
 
     # create new sequence
     new_sequence = SequenceInformation(my_msa.get_sequence(), my_msa.get_consensus_sequence())
@@ -175,21 +180,31 @@ def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_
     new_sequence.calculate_binding_core()
     new_sequence.write_sequence('data/mutated_sequence.fasta')
 
-    print('Immunogenicity before :' + str(target_sequence.base_immunogenicity))
-    print('Immunogenicity after :' + str(new_sequence.base_immunogenicity))
-    print('Epitope count before :' + str(target_sequence.get_number_epitopes()))
-    print('Epitope count after :' + str(new_sequence.get_number_epitopes()))
+    LOG.info('Immunogenicity before :' + str(target_sequence.base_immunogenicity))
+    LOG.info('Immunogenicity after :' + str(new_sequence.base_immunogenicity))
+    LOG.info('Epitope count before :' + str(target_sequence.get_number_epitopes()))
+    LOG.info('Epitope count after :' + str(new_sequence.get_number_epitopes()))
 
     plot_epitope_spread(target_sequence.part_of_core_pos, new_sequence.part_of_core_pos,
                         target_sequence.get_length_sequence())
 
 
 def decision_function_simple(mutations, weight):
+    """
+    uses a decision function to determine which mutations to actually apply
+    calculates scores for all possible mutations
+    score = immunogenecity - weight * ddG value
+    lowest score wins -> is mutated
+    :param mutations:
+    :param weight:
+    :return:
+    """
     best_mutation = PointMutation('', -1, float('inf'), float('-inf'), '')
     for mut in mutations:
         if (mut.immunogenicity - (weight * mut.ddG) < best_mutation.immunogenicity - (weight * best_mutation.ddG)) and (
                 mut.immunogenicity < best_mutation.immunogenicity):
             best_mutation = mut
+
     return best_mutation
 
 

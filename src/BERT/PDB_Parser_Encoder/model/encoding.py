@@ -1,3 +1,12 @@
+import logging
+
+console = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console.setFormatter(formatter)
+LOG = logging.getLogger("PDB Parser Encoding")
+LOG.addHandler(console)
+LOG.setLevel(logging.INFO)
+
 # map containing the blomap values
 # Three letter amino acid code
 blomap_three = {
@@ -28,6 +37,7 @@ def blopmap_encode_three_letter(amino_acid):
     try:
         return blomap_three[amino_acid]
     except Exception:
+        LOG.error("Encountered an unknown amino acid")
         return [0, 0, 0, 0, 0]
 
 
@@ -60,4 +70,5 @@ def blopmap_encode_one_letter(amino_acid):
     try:
         return blomap_one[amino_acid]
     except Exception:
+        LOG.error("Encountered an unknown amino acid")
         return [0, 0, 0, 0, 0]

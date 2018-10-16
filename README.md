@@ -10,7 +10,7 @@ Quick Setup for users
 1. <code>$ git clone https://github.com/steffenlem/Deimmunization</code>
 2. <code>$ python setup.py install</code>
 3. Installation of NetMHCIIpan (http://www.cbs.dtu.dk/cgi-bin/nph-sw_request?netMHCIIpan) 
-4. <code>$ deimmunization</code>
+4. <code>$ BERT</code>
 
 We are unfortunately not allowed to ship NetMHCIIPan, but for academic users it's free of charge.
 If you have any issues with the setup, please don't hesitate to contact us on igem@ifib.uni-tuebingen.de  .
@@ -60,7 +60,7 @@ Examples
 =====
 Example command:    
 ```
-deimmunization -in <MSApath> -rs <ref.seqMSA> -t 0.5 -a DRB1_0301,DRB1_0701,DRB1_1501 -mp <path_netMHCIIPan> -pdb <path.pdb> -pos 2 -mt 2 -cha B -w 10 -frq 0.099,0.109,0.0967    
+BERT -in <MSApath> -rs <ref.seqMSA> -t 0.5 -a DRB1_0301,DRB1_0701,DRB1_1501 -mp <path_netMHCIIPan> -pdb <path.pdb> -pos 2 -mt 2 -cha B -w 10 -frq 0.099,0.109,0.0967    
 ```
 You can use the following MSA, PDB and sequence files shipped with this program:
 Example MSA: 'data/Isomerase_90_similarity.clustal_num'    

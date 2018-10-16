@@ -1,6 +1,13 @@
-import random
+import logging
 
 from src.BERT.netMHCIIpanParser.netMHCIIparser import parse_netMHCIIpan
+
+console = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console.setFormatter(formatter)
+LOG = logging.getLogger("Sequence Information")
+LOG.addHandler(console)
+LOG.setLevel(logging.INFO)
 
 
 class SequenceInformation:
@@ -102,7 +109,6 @@ class SequenceInformation:
         """
         return self.mhc_alleles
 
-
     def base_immunogenicity(self):
         """
         Getter for base base_immunogenicity
@@ -121,11 +127,10 @@ class SequenceInformation:
             for aa in self.sequence:
                 f.write(str(aa))
 
-
     def get_number_epitopes(self):
         count = 0
         for allele in self.epitope_prediction:
-            for epitope in allele:
+            for _ in allele:
                 count += 1
         return count
 
@@ -144,22 +149,19 @@ class SequenceInformation:
         seq = self.get_sequence().copy()
         seq[index] = amino_acid
         chunk = []
-        peptide_length = 15  # TODO remove magic number
+        PEPTIDE_LENGTH = 15
 
-        if index >= (peptide_length - 1):  # check if index is next to start of the sequence
-            if (len(seq) - 1) >= (index + peptide_length - 1):
-                chunk = seq[(index - (peptide_length - 1)):index + peptide_length]
+        if index >= (PEPTIDE_LENGTH - 1):  # check if index is next to start of the sequence
+            if (len(seq) - 1) >= (index + PEPTIDE_LENGTH - 1):
+                chunk = seq[(index - (PEPTIDE_LENGTH - 1)):index + PEPTIDE_LENGTH]
             else:
-                chunk = seq[(index - (peptide_length - 1)):]
+                chunk = seq[(index - (PEPTIDE_LENGTH - 1)):]
 
         else:
-            if (len(seq) - 1) >= (index + peptide_length):
-                chunk = seq[:(index + peptide_length)]
+            if (len(seq) - 1) >= (index + PEPTIDE_LENGTH):
+                chunk = seq[:(index + PEPTIDE_LENGTH)]
             else:
-                print('Input Peptide Sequnce is too short')
-                # such short sequences should not be accepted
-                # this case should never be true
-                # TODO implement input constraint, no sequences shorter than MHCII peptide length (15)
+                LOG.error('Input Peptide Sequnce is too short')
 
         with open('data/temp.fasta', 'w') as f:
             f.write('>sequence\n')
@@ -177,7 +179,6 @@ class SequenceInformation:
             for epitope in all_alleles:
                 immunogenicity += self.mhc_alleles[epitope[1]]
         self.base_immunogenicity = immunogenicity
-
 
     def update_immunogenicity(self, amino_acid, index, mhc_pan_path):
         """
@@ -200,7 +201,6 @@ class SequenceInformation:
             new_imm += len(prediction) * self.mhc_alleles[allele[0][1]]
 
         return immunogenicity + new_imm
-
 
     def determine_mutable_positions(self):
         """
@@ -248,6 +248,11 @@ class SequenceInformation:
                 self.queue.append(pos[0])
 
     def introduce_mutations(self, mutations):
+        """
+        mutates amino acids from a given set of mutations
+        :param mutations:
+        :return:
+        """
         if mutations is None:
             pass
         else:
@@ -255,10 +260,15 @@ class SequenceInformation:
                 self.set_sequence_pos(pos.amino_acid, pos.index)
 
     def predictEpitopes(self, mhc_ii_pan, temporary_output_path):
+        """
+        delegates to run NetMHCIIPan and parses the result
+        :param mhc_ii_pan:
+        :param temporary_output_path:
+        :return:
+        """
         for allele in self.mhc_alleles:
             prediction_data = parse_netMHCIIpan(mhc_ii_pan, temporary_output_path, allele)
             self.set_allele_prediction(prediction_data)
-
 
     def calculate_binding_core_weighted(self):
         """
@@ -271,7 +281,8 @@ class SequenceInformation:
                 for pos in range(9):
 
                     if epitope[3] - 1 + pos in calc_epitope:
-                        calc_epitope[epitope[3] - 1 + pos] = calc_epitope[epitope[3] - 1 + pos] + self.mhc_alleles[epitope[1]]
+                        calc_epitope[epitope[3] - 1 + pos] = calc_epitope[epitope[3] - 1 + pos] + self.mhc_alleles[
+                            epitope[1]]
                     else:
                         calc_epitope[epitope[3] - 1 + pos] = self.mhc_alleles[epitope[1]]
         self.part_of_core_pos_weighted = [[key, value] for key, value in calc_epitope.items()]

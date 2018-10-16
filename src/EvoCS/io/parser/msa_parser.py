@@ -3,13 +3,13 @@ import logging
 console = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console.setFormatter(formatter)
-LOG = logging.getLogger("File parser")
+LOG = logging.getLogger("MSA File parser")
 LOG.addHandler(console)
 LOG.setLevel(logging.INFO)
 
 
 def parse_and_setup_info(inputfile, reference_sequence):
-    LOG.info("Start Read")
+    LOG.debug("Reading MSA file")
     with open(inputfile) as text:
         msa = []
         for line in text:
@@ -19,7 +19,7 @@ def parse_and_setup_info(inputfile, reference_sequence):
     content = remove_non_sequences(content)
     content = reduce_space(remove_newline(content))
 
-    LOG.info("Start Grouping Content")
+    LOG.debug("Start Grouping Content")
     msa_content = []
     for i in content:
         if i.startswith(reference_sequence):
@@ -27,8 +27,8 @@ def parse_and_setup_info(inputfile, reference_sequence):
             msa_content.append(msa_element)
         else:
             msa_element.append(i)
-    LOG.info("End Grouping Content")
-    LOG.info("End Read")
+    LOG.debug("End Grouping Content")
+    LOG.debug("Successfully read MSA file")
 
     return msa_content
 

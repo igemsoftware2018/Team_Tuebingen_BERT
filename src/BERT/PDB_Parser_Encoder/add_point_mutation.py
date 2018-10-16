@@ -1,8 +1,25 @@
+import logging
+
 from src.BERT.PDB_Parser_Encoder.io.writer.three_list_to_string_writer import three_list_to_string
 from src.BERT.PDB_Parser_Encoder.model.encoding import blopmap_encode_one_letter, blopmap_encode_three_letter
 
+console = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console.setFormatter(formatter)
+LOG = logging.getLogger("PDB Parser - Point Mutation")
+LOG.addHandler(console)
+LOG.setLevel(logging.INFO)
+
 
 def do_and_return_pointmutation(encoded_pdb_informations, residue_id, chain,  new_residue):
+    """
+    Applies a point mutation on a residue
+    :param encoded_pdb_informations:
+    :param residue_id:
+    :param chain:
+    :param new_residue:
+    :return:
+    """
     for residue_info in encoded_pdb_informations:
         if residue_info[1][0] == residue_id and residue_info[1][1] == chain:
             if len(new_residue) == 1:

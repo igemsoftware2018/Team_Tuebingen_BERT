@@ -30,7 +30,7 @@ def write_consensus_sequence(msa_content, threshold):
                 major_class, gapcount = compute_majorities(aminoacids_at_position, threshold)
                 consensus_array.append([aminoacids_at_position[0], major_class, gapcount])
 
-    LOG.info("Finish computation for majority classes and gapcounts")
+    LOG.info("Successfully finished computation for majority classes and gapcounts")
 
     return consensus_array
 

@@ -29,7 +29,7 @@ class MSA:
         """
         return [x[0] for x in self.consensus_sequence]
 
-    def write_sequnce(self, path):
+    def write_sequence(self, path):
         """
         Writes the target sequence to file
         :param path: path of the output file
