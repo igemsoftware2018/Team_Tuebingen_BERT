@@ -69,5 +69,10 @@ Our tool is made available under the [MIT License](http://www.opensource.org/lic
 
 Authors
 =====
-The iGEM Team Tübingen drylab developers
+Team iGEM 2018 Tübingen    
+Steffen Lemke    
+Lukas Heumos    
+Alexander Röhl
+
+
 
