@@ -29,6 +29,6 @@ setup(
     data_files=[('data/inputfiles', ['data/inputfiles/contact_blomap_7A.csv']),
                 ('data', ['data/2wcv.pdb']),
                 ('data', ['data/dataset_S2648_edited_tsv.csv']),
-                ('data', ['data/isomerase_90_similarity.clustal_num'])
+                ('data', ['data/Isomerase_90_similarity.clustal_num'])
     ]
 )
