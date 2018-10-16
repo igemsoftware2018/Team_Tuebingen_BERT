@@ -1,16 +1,16 @@
 import logging
 import sys
 
-from src.ddGRegressor.io.parser.csv_blomap_parser import parse_csv_blomap
-from src.ddGRegressor.algorithms.dataset.random_split import random_dataset_split
+from src.CoReM.io.parser.csv_blomap_parser import parse_csv_blomap
+from src.CoReM.algorithms.dataset.random_split import random_dataset_split
 from xgboost import XGBRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
-from src.ddGRegressor.algorithms.learning_model_train.regression_training import train_regression
-from src.ddGRegressor.algorithms.evaluation.cross_validation import k_fold_cross_validation
-from src.ddGRegressor.algorithms.evaluation.setup_eval_plot import setup_evaluation_plot
-from src.ddGRegressor.algorithms.learning_model_predict.learning_model_predict import predict_using_regression
-from src.ddGRegressor.io.writer.predicted_file_writer import write_predicted_blomap_file
+from src.CoReM.algorithms.learning_model_train.regression_training import train_regression
+from src.CoReM.algorithms.evaluation.cross_validation import k_fold_cross_validation
+from src.CoReM.algorithms.evaluation.setup_eval_plot import setup_evaluation_plot
+from src.CoReM.algorithms.learning_model_predict.learning_model_predict import predict_using_regression
+from src.CoReM.io.writer.predicted_file_writer import write_predicted_blomap_file
 
 # # Other tested learning algorithms
 # from sklearn.linear_model import Lasso  # benötigt alpha=0.0001 Parameter

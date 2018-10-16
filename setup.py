@@ -14,7 +14,7 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(
-    name='Deimmunization',
+    name='BERT',
     version=version,
     description='Deimmunization workflow',
     long_description=readme,
@@ -22,8 +22,13 @@ setup(
     author='IGEM-Tuebingen-2018',
     author_email='igem@ifib.uni-tuebingen.de',
     license=license,
-    scripts=['scripts/deimmunization'],
+    scripts=['scripts/BERT'],
     install_requires=required,
     packages=find_packages(exclude='docs'),
-    include_package_data=True
+    include_package_data=True,
+    data_files=[('data/inputfiles', ['data/inputfiles/contact_blomap_7A.csv']),
+                ('data', ['data/2wcv.pdb']),
+                ('data', ['data/dataset_S2648_edited_tsv.csv']),
+                ('data', ['data/Isomerase_90_similarity.clustal_num'])
+    ]
 )
