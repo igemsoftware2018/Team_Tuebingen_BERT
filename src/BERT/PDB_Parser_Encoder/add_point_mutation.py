@@ -1,6 +1,5 @@
-from src.PDB_Parser_Encoder.model.encoding import blopmap_encode_one_letter
-from src.PDB_Parser_Encoder.model.encoding import blopmap_encode_three_letter
-from src.PDB_Parser_Encoder.io.writer.three_list_to_string_writer import three_list_to_string
+from src.BERT.PDB_Parser_Encoder.io.writer.three_list_to_string_writer import three_list_to_string
+from src.BERT.PDB_Parser_Encoder.model.encoding import blopmap_encode_one_letter, blopmap_encode_three_letter
 
 
 def do_and_return_pointmutation(encoded_pdb_informations, residue_id, chain,  new_residue):

@@ -2,7 +2,8 @@ import warnings
 
 from Bio.PDB import PDBParser
 from Bio.PDB.PDBExceptions import PDBConstructionWarning
-from src.PDB_Parser_Encoder.io.parser.parse_pdb import get_contact_info
+
+from src.BERT.PDB_Parser_Encoder.io.parser.parse_pdb import get_contact_info
 
 
 def parse_and_encode_pdb(pdb_path, angstrom):

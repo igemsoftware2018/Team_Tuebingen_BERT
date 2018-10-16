@@ -1,5 +1,6 @@
-from src.netMHCIIpanParser.netMHCIIparser import parse_netMHCIIpan
 import random
+
+from src.BERT.netMHCIIpanParser.netMHCIIparser import parse_netMHCIIpan
 
 
 class SequenceInformation:

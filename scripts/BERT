@@ -4,19 +4,19 @@ import click
 import logging
 import pandas as pd
 
-from src.MSAParser.model.MSA import MSA
-from src.sequence_information.SequenceInformation import SequenceInformation
-from src.mutationRules.mutationRules import mutation_order_by_group
-from src.PointMutation.PointMutation import PointMutation
-from src.PDB_Parser_Encoder.main import parse_and_encode_pdb
-from src.PDB_Parser_Encoder.add_point_mutation import do_and_return_pointmutation
-from src.ddGRegressor.main import train_regressor
-from src.evaluation.epitope_per_index_plot import plot_epitope_spread
+from src.BERT.PDB_Parser_Encoder.add_point_mutation import do_and_return_pointmutation
+from src.BERT.PDB_Parser_Encoder.main import parse_and_encode_pdb
+from src.BERT.core.PointMutation import PointMutation
+from src.BERT.core.SequenceInformation import SequenceInformation
+from src.BERT.evaluation.epitope_per_index_plot import plot_epitope_spread
+from src.BERT.mutationRules.mutationRules import mutation_order_by_group
+from src.CoReM.main import train_regressor
+from src.EvoCS.model.MSA import MSA
 
 console = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console.setFormatter(formatter)
-LOG = logging.getLogger("Commandline parser")
+LOG = logging.getLogger("BERT")
 LOG.addHandler(console)
 LOG.setLevel(logging.INFO)
 
@@ -51,6 +51,16 @@ LOG.setLevel(logging.INFO)
               required=True, default=1, type=str)
 def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_pan, pdb_file, pos_to_check,
          number_mutations, pdb_chain, weight, allele_frequency):
+    print("""
+ ______ ___________ _____ 
+| ___ \  ___| ___ \_   _|
+| |_/ / |__ | |_/ / | |  
+| ___ \  __||    /  | |  
+| |_/ / |___| |\ \  | |  
+\____/\____/\_| \_| \_/  
+    """)
+
+
     # Split MHC-alleles, and frequencies
     mhc_alleles = [c.strip() for c in mhc_alleles.split(',')]
     allele_frequency = [float(c.strip()) for c in allele_frequency.split(',')]
@@ -66,7 +76,7 @@ def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_
     my_msa = MSA(input_msa, reference_sequence, majority_threshold)
     my_msa.write_sequnce('data/ref_sequence.fasta')
 
-    # Information about the sequenece (eptitopes, msa, ...) is bundled
+    # Information about the sequences (eptitopes, msa, ...) is bundled
     target_sequence = SequenceInformation(my_msa.get_sequence(), my_msa.get_consensus_sequence())
 
     target_sequence.set_mhc_alleles(mhc_alleles)
@@ -76,7 +86,7 @@ def main(input_msa, reference_sequence, majority_threshold, mhc_alleles, mhc_ii_
     target_sequence.calculate_binding_core_weighted()
     target_sequence.make_queue_mutation()
 
-    # Convert settings paramerts
+    # Convert settings parameters
     number_mutations = int(number_mutations)
     pos_to_check = int(pos_to_check)
 

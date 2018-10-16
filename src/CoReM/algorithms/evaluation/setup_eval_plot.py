@@ -2,7 +2,7 @@ import logging
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.ddGRegressor.io.writer.plot_file_writer import write_plot_as_png
+from src.CoReM.io.writer.plot_file_writer import write_plot_as_png
 
 console = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

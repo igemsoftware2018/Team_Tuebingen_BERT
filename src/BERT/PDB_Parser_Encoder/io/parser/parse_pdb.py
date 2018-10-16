@@ -2,7 +2,8 @@ import math
 import numpy as np
 
 from Bio.PDB.Selection import unfold_entities
-from src.PDB_Parser_Encoder.model.encoding import blopmap_encode_three_letter
+
+from src.BERT.PDB_Parser_Encoder.model.encoding import blopmap_encode_three_letter
 
 
 def get_contact_info(structure, path, chain, angstrom, residue_id):

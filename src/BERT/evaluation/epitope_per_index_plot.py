@@ -93,10 +93,6 @@ def create_epitope_pred_plot(X, y, plot_number, highest_epitope_count):
     pos = np.arange(len(y))
 
     ax = plt.axes()
-    ax.set_xticks(pos)
-    ax.set_xticklabels(X, fontsize=6)
-
-    keep_only_nth_label(ax)
 
     plt.figure(plot_number)
     plt.xlabel("Amino Acid")
@@ -107,4 +103,3 @@ def create_epitope_pred_plot(X, y, plot_number, highest_epitope_count):
 
     return plt
 
-# plot_epitope_spread(before, after, 140)

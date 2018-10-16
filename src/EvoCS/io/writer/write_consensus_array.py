@@ -1,6 +1,6 @@
 import logging
 
-from src.MSAParser.algorithm.majority_count import compute_majorities
+from src.EvoCS.algorithm.majority_count import compute_majorities
 
 console = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
