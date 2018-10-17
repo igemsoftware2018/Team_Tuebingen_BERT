@@ -3,6 +3,7 @@
 
 # BERT 
 BERT is a powerful workflow for the automated deimmunization of proteins. BERT is based on three modular tools: EvoCS, MHCBoost or alternatively NetMHCIIPan and CoReM.
+Please refer to our wiki for details: [Software](http://2018.igem.org/Team:Tuebingen/Software).
 
 
 Quick Setup for users
@@ -67,6 +68,9 @@ Example MSA: 'data/Isomerase_90_similarity.clustal_num'
 Example PDB: 'data/2wcv.pdb'    
 Example Reference Sequence: '2WCV_Paris'    
   
+Performance and Results
+=====
+BERT has been applied to team iGEM Paris-Bettencourt's FucU isomerase protein. The results are documented on our wiki: [Collaboration](http://2018.igem.org/Team:Tuebingen/Collaborations).
 
 License
 =====
