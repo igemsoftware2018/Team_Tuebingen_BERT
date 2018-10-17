@@ -27,9 +27,12 @@ def plot_epitope_spread(epitopes_per_index_before, epitopes_per_index_after, pro
 
     # create plots for both sets
     plt = create_epitope_pred_plot(X_before, y_before, 1, highest_epitope_count)
+
+    plt.show()
+
     plt = create_epitope_pred_plot(X_after, y_after, 2, highest_epitope_count)
 
-    plt.show()  # shows both plots in separate windows
+    plt.show()
 
 
 def keep_only_nth_label(ax):

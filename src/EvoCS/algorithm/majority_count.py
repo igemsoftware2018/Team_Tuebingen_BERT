@@ -1,10 +1,25 @@
+import logging
+
 from src.EvoCS.model.aminoacid_classes import aminoacid_classes_by_number
 from src.EvoCS.model.aminoacid_classes import aminoacid_classes_by_code
 from src.EvoCS.model.aminoacid_classes import one_letter_encoding_to_number
 from src.EvoCS.model.aminoacid_classes import one_letter_encoding_to_letter
 
+console = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console.setFormatter(formatter)
+LOG = logging.getLogger("Majority Count")
+LOG.addHandler(console)
+LOG.setLevel(logging.INFO)
 
 def compute_majorities(position_specific_list_of_acids, threshold):
+    """
+    computes the most prevalent amino acid (the conserved one)
+    if it doesn t find a conserved amino acid it attempts to find the major class of the amino acid
+    :param position_specific_list_of_acids:
+    :param threshold: threshold for an amino acid to be considered conserved: default <-- 50%
+    :return:
+    """
     lower_threshold = len(position_specific_list_of_acids) * threshold
     major_class = ''
     gapcount = 0
@@ -20,10 +35,17 @@ def compute_majorities(position_specific_list_of_acids, threshold):
             major_class = one_letter_encoding_to_letter[acidcounts.index(count)]
     if major_class == '':
         major_class = find_major_class(acidcounts, lower_threshold)
+
     return major_class, gapcount/len(position_specific_list_of_acids)
 
 
 def find_major_class(acid_counts, lower_threshold):
+    """
+    attempts to find the major class of the amino acid e.g. hydrophobic
+    :param acid_counts:
+    :param lower_threshold:
+    :return:
+    """
     major_class = ''
     aminoacid_class_counts = [0 for i in range(11)]
     for i in range(len(aminoacid_class_counts)):
@@ -37,4 +59,5 @@ def find_major_class(acid_counts, lower_threshold):
         if aminoacid_class_counts[i] >= lower_threshold:
             major_class = aminoacid_classes_by_number[i]
             break
+            
     return major_class
