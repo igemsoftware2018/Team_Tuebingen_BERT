@@ -70,7 +70,7 @@ Example Reference Sequence: '2WCV_Paris'
   
 Performance and Results
 =====
-BERT has been applied to team iGEM Paris-Bettencourt's FucU isomerase protein. The results are documented on our wiki: [Collaboration](http://2018.igem.org/Team:Tuebingen/Collaborations).
+BERT has been applied to team iGEM Paris-Bettencourt's FucU isomerase protein. The results are documented on our wiki: [Collaboration](http://2018.igem.org/Team:Tuebingen/Collaborations). Moreover, BERT was used to deimmunize BoNTC. Details can be found on our software page: [Software](http://2018.igem.org/Team:Tuebingen/Software).
 
 License
 =====
